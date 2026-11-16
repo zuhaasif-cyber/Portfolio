@@ -1,0 +1,8 @@
+# full-resolution master artwork: kept locally, not published
+HeroBG.png
+# local design tool (illustration review sheet)
+illustrations.html
+# editor / OS / tooling
+.claude/
+.DS_Store
+node_modules/

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Zuha Asif — Interaction designer</title>
+  <meta name="description" content="Zuha Asif is an interaction designer who makes complex enterprise systems feel intuitive and human — and a painter of botanicals." />
+  <meta name="theme-color" content="#000000" />
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Bricolage Grotesque, optical size pinned at 14 as in the Figma reference -->
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@14,200..800&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/art/botanical-1800.jpg"
+        imagesrcset="assets/art/botanical-1100.jpg 1100w, assets/art/botanical-1800.jpg 1800w, assets/art/botanical-2800.jpg 2800w"
+        imagesizes="(min-width: 761px) 74vw, 100vw" fetchpriority="high" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#about">Skip to content</a>
+
+  <header class="topbar" data-tone="cream">
+    <a class="topbar__mark" href="#top">Zuha Asif</a>
+    <nav aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============================================================ hero -->
+    <section class="hero" id="top" aria-labelledby="hero-name">
+      <div class="hero__pin">
+        <canvas class="hero__canvas" aria-hidden="true"></canvas>
+        <figure class="hero__art">
+          <img
+            src="assets/art/botanical-1800.jpg"
+            srcset="assets/art/botanical-1100.jpg 1100w, assets/art/botanical-1800.jpg 1800w, assets/art/botanical-2800.jpg 2800w"
+            sizes="(min-width: 761px) 74vw, 100vw"
+            width="4720" height="3280"
+            fetchpriority="high"
+            alt="An original botanical painting by Zuha Asif on a black ground: a large saffron daisy with a speckled ochre centre, an orange daisy behind it, cyan fern fronds and trailing oxblood leaves, a pink orchid outlined in teal, violet trumpet flowers, a fuzzy magenta bloom, a red lily with yellow stamens and a cluster of white, lilac and marigold asters." />
+        </figure>
+        <h1 class="hero__name" id="hero-name"><span class="hero__line">Zuha<i class="probe"></i></span><span class="hero__line">Asif<i class="probe"></i></span></h1>
+        <p class="hero__role">Interaction designer</p>
+        <p class="hero__cue" aria-hidden="true">Scroll — let it fall</p>
+      </div>
+    </section>
+
+    <!-- =========================================================== about -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 class="about__title display reveal reveal-line" id="about-title">Half systems,<br />half sketchbook.</h2>
+
+      <p class="about__lead reveal reveal-line" style="--d:120">
+        I’m an interaction designer with 3 years of experience, and I specialize in making
+        <strong>complex enterprise systems feel intuitive and human.</strong>
+      </p>
+
+      <div class="about__body reveal reveal-line" style="--d:200">
+        <p>
+          My work has lived in the unglamorous but deeply important corners of enterprise software —
+          <span class="hl hl--inv">inventory management</span>, <span class="hl hl--cost">cost estimation</span>,
+          <span class="hl hl--qual">quality control</span>. And what keeps me going is knowing that when I get it right,
+          I’m making the daily work of thousands of people in warehouses and operations teams a little less frustrating,
+          a little more dignified.
+        </p>
+      </div>
+      <div class="about__body reveal reveal-line" style="--d:320">
+        <p>
+          These days, I’m especially drawn to the intersection of <strong>AI and enterprise UX</strong> — designing
+          intelligent systems that don’t just automate tasks, but genuinely support the people using them. I believe AI is
+          only as good as the experience wrapped around it, and that’s where I want to be.
+        </p>
+      </div>
+
+      <div class="about__studio">
+        <figure class="fragment reveal">
+          <div class="fragment__img" role="img" aria-label="A torn fragment of the painting: the speckled ochre centre of the saffron daisy"></div>
+          <figcaption>fig. — a piece that didn’t fall</figcaption>
+        </figure>
+        <p class="reveal reveal-line" style="--d:120">
+          Outside of work, I paint and illustrate — mostly botanicals, things I find in nature. It’s where I slow down,
+          pay attention to detail, and let observation become something visual. <em>Honestly, it’s not that different from design.</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================ work -->
+    <section class="work" id="work" aria-labelledby="work-title">
+      <h2 class="work__title display" id="work-title">
+        <span class="reveal reveal-line">My last 3 years was in a large warehouse;</span>
+        <span class="soft reveal reveal-line" style="--d:220">not literally but close enough</span>
+      </h2>
+
+      <!-- Inventory -->
+      <article class="chapter chapter--inventory" data-domain="inventory" aria-labelledby="inv-title">
+        <header class="chapter__head">
+            <div class="chapter__text">
+              <span class="chapter__node" aria-hidden="true"></span>
+              <h3 class="chapter__title reveal reveal-line" id="inv-title">Inventory</h3>
+              <p class="chapter__headline reveal reveal-line" style="--d:140">Where goods begin their journey</p>
+              <p class="chapter__intro reveal reveal-line" style="--d:260">
+                I designed workflows for how items move — from supplier to warehouse to customer. Receiving, put-away,
+                storage, pick, pack, ship. The kind of flows that run silently in the background of every product you’ve ever ordered.
+              </p>
+            </div>
+          </header>
+        <div class="chapter__pin">
+          <div class="chapter__sticky">
+          <figure class="flow" aria-labelledby="inv-cap">
+            <div class="flow__art"></div>
+            <figcaption class="sr-only" id="inv-cap">
+              Mobile inventory workflow. Inbound: record receipt, inspect receipt, misc receipt.
+              Inventory: put away, cycle count, PAR count, subinventory transfer, stock inquiry.
+              Outbound: pick confirm, misc issue, inter-org transfer, ship goods.
+            </figcaption>
+          </figure>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quality -->
+      <article class="chapter chapter--quality" data-domain="quality" aria-labelledby="qual-title">
+        <header class="chapter__head">
+            <div class="chapter__text">
+              <span class="chapter__node" aria-hidden="true"></span>
+              <h3 class="chapter__title reveal reveal-line" id="qual-title">Quality</h3>
+              <p class="chapter__headline reveal reveal-line" style="--d:140">Where standards get enforced</p>
+              <p class="chapter__intro reveal reveal-line" style="--d:260">
+                Inspection plans, quality characteristics, result collection for maintenance work orders — I designed for
+                the people whose job is to catch what others miss. Precision matters here, and so does clarity.
+              </p>
+            </div>
+          </header>
+        <div class="chapter__pin">
+          <div class="chapter__sticky">
+          <figure class="flow" aria-labelledby="qual-cap">
+            <div class="flow__art"></div>
+            <figcaption class="sr-only" id="qual-cap">
+              Quality management workflow. Manufactured and purchased items arrive; inspection plans are created;
+              items are inspected; results are entered. Failed goods are scrapped. Passed goods are analysed and
+              shipped with a certificate of conformance.
+            </figcaption>
+          </figure>
+          </div>
+        </div>
+      </article>
+
+      <!-- Costing -->
+      <article class="chapter chapter--costing" data-domain="costing" aria-labelledby="cost-title">
+        <header class="chapter__head">
+            <div class="chapter__text">
+              <span class="chapter__node" aria-hidden="true"></span>
+              <h3 class="chapter__title reveal reveal-line" id="cost-title">Costing</h3>
+              <p class="chapter__headline reveal reveal-line" style="--d:140">Where numbers meet reality</p>
+              <p class="chapter__intro reveal reveal-line" style="--d:260">
+                Cost estimation is complex — purchased items, manufactured goods, overhead rates, cost rollups. I worked on
+                making these processes navigable for users who live inside spreadsheets and ERP screens all day.
+              </p>
+            </div>
+          </header>
+        <div class="chapter__pin">
+          <div class="chapter__sticky">
+          <figure class="flow" aria-labelledby="cost-cap">
+            <div class="flow__art"></div>
+            <figcaption class="sr-only" id="cost-cap">
+              Cost management workflow. Purchased goods (purchase price plus freight, insurance and duties) are matched
+              against the supplier invoice. Manufactured goods add material, labour and machine, and factory overhead cost.
+              Goods in inventory roll up to a total item cost and an on-hand inventory value. When goods are sold their
+              value is calculated, inventory value is updated, and cost margins are analysed.
+            </figcaption>
+          </figure>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="outro" id="contact" aria-labelledby="contact-title">
+    <span class="outro__anchor" aria-hidden="true"></span>
+    <p class="outro__line reveal reveal-line">I think in systems, <strong>and I paint what I notice.</strong></p>
+
+    <div class="contact">
+      <h2 class="contact__title reveal reveal-line" id="contact-title">Let’s talk — about systems, flowers, or both.</h2>
+      <a class="contact__email reveal reveal-line" style="--d:120" href="mailto:zuhaasif.work@gmail.com">zuhaasif.work@gmail.com</a>
+      <ul class="contact__list reveal reveal-line" style="--d:240">
+        <li><span class="contact__k">LinkedIn</span><a href="https://www.linkedin.com/in/zuhaasifp/" target="_blank" rel="noopener">in/zuhaasifp<span class="sr-only"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+
+    <div class="outro__meta">
+      <span>Zuha Asif — Interaction designer</span>
+      <span>© 2026</span>
+    </div>
+  </footer>
+
+  <noscript><style>.reveal-line{clip-path:none!important}</style></noscript>
+</body>
+</html>
