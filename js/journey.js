@@ -47,6 +47,7 @@ export function initJourney({ reduced = false } = {}) {
   const tGrads = [...thread.querySelectorAll('linearGradient')];
 
   let mode = null;
+  const segU = [0, 0, 0, 0]; // thread progress, latched
   let vh = innerHeight;
   let segRanges = [];
 
@@ -69,6 +70,10 @@ export function initJourney({ reduced = false } = {}) {
       ch.clipMain = ch.svg.querySelector('.clip-main, .clip-main-v');
       ch.clipStems = [...ch.svg.querySelectorAll('.clip-stem')];
       ch.F = FLOWS[ch.key];
+      // reveal is latched: it only ever moves forward until the page is reloaded
+      ch.reveal = -Infinity;
+      ch.done = false;
+      ch.active = false;
     }
   }
 
@@ -110,12 +115,12 @@ export function initJourney({ reduced = false } = {}) {
         ch.sticky.style.top = `${Math.round(top)}px`;
         ch.top = top;
         ch.pan = Math.max(0, ch.panW + 2 * gutter - ch.winW);
-        ch.D = Math.round(vh * 1.15 + ch.pan * 1.3);
+        ch.D = Math.round(vh * 0.75 + ch.pan * 1.05);
         ch.pin.style.height = `${h + ch.D}px`;
       }
       for (const ch of chapters) {
         ch.flowStart = docY(ch.pin) - ch.top;
-        ch.flowEnd = ch.flowStart + ch.D * 0.86;
+        ch.flowEnd = ch.flowStart + ch.D * 0.9;
       }
     } else {
       for (const ch of chapters) {
@@ -206,15 +211,23 @@ export function initJourney({ reduced = false } = {}) {
       ch.flow.classList.toggle('is-live', near && !reduced);
       if (desktop) {
         const { x0, x1 } = ch.F.line;
-        const head = x0 + prog * (x1 - x0);
+        const cam = x0 + prog * (x1 - x0);
+        let off = 0;
         if (!reduced) {
-          // camera follows the growing stem
-          let off;
+          // the camera follows scroll position (so scrolling back up pans back)…
           if (ch.pan <= 0) off = -(ch.winW - ch.panW) / 2;
-          else off = Math.max(-gutter, Math.min(ch.panW + gutter - ch.winW, head * ch.k - ch.winW * 0.58));
+          else off = Math.max(-gutter, Math.min(ch.panW + gutter - ch.winW, cam * ch.k - ch.winW * 0.58));
           ch.svg.style.transform = `translate3d(${(-off).toFixed(1)}px,0,0)`;
         }
-        ch.clipMain.setAttribute('width', Math.max(0, head - x0 + 20 + (prog >= 1 ? 30 : 0)).toFixed(1));
+        // …but the drawing leads it: everything on screen (plus a margin ahead) is
+        // revealed at once, and never un-drawn when scrolling back up.
+        const camRight = (off + ch.winW) / (ch.k || 1);
+        const want = reduced ? Infinity : near || prog > 0 ? Math.max(cam, camRight + 160) : -Infinity;
+        if (want > ch.reveal) ch.reveal = want;
+        if (ch.done) return;
+        const head = Math.max(x0, Math.min(x1, ch.reveal));
+        if (head >= x1) ch.done = true;
+        ch.clipMain.setAttribute('width', Math.max(0, head - x0 + 20 + (ch.done ? 30 : 0)).toFixed(1));
         ch.clipStems.forEach((r, i) => {
           const st = ch.F.stems[i];
           const k = clamp01((head - st.at) / 160);
@@ -228,18 +241,21 @@ export function initJourney({ reduced = false } = {}) {
           r.setAttribute('height', (k * (bot - top) + pad * 2).toFixed(1));
         });
         for (const it of ch.items) {
-          const on = reduced || (it.at <= x0 ? near || prog > 0 : prog > 0 && head >= it.at);
-          if (on !== it.on) { it.on = on; it.el.classList.toggle('is-in', on); }
+          if (!it.on && (ch.done || head >= it.at)) { it.on = true; it.el.classList.add('is-in'); }
         }
       } else {
-        const H = ch.geo.view[1];
-        const head = ch.geo.entry[1] + prog * (ch.geo.exit[1] - ch.geo.entry[1]);
+        if (ch.done) return;
+        // mobile: reveal whatever has scrolled into the lower part of the screen
+        const r = ch.svg.getBoundingClientRect();
+        const k = r.width / ch.geo.view[0] || 1;
+        const want = reduced ? Infinity : (vh * 0.95 - r.top) / k;
+        if (want > ch.reveal) ch.reveal = want;
+        const head = Math.max(0, Math.min(ch.geo.view[1], ch.reveal));
+        if (head >= ch.geo.view[1]) ch.done = true;
         ch.clipMain.setAttribute('height', (head + 10).toFixed(1));
         for (const it of ch.items) {
-          const on = reduced || head >= it.at - 30 || (prog >= 1);
-          if (on !== it.on) { it.on = on; it.el.classList.toggle('is-in', on); }
+          if (!it.on && (ch.done || head >= it.at - 30)) { it.on = true; it.el.classList.add('is-in'); }
         }
-        void H;
       }
     });
 
@@ -293,12 +309,15 @@ export function initJourney({ reduced = false } = {}) {
 
     segs.forEach(([p, ni], i) => {
       const [a, b] = segRanges[i];
-      const u = reduced ? 1 : clamp01((y - a) / Math.max(1, b - a));
-      const reached = drawSeg(i, p, u, ni);
+      const now = reduced ? 1 : clamp01(((y - a) / Math.max(1, b - a)) * 1.35);
+      segU[i] = Math.max(segU[i], now);
+      const reached = drawSeg(i, p, segU[i], ni);
       if (i < 3) {
         const ch = chapters[i];
-        const active = reduced || reached || u >= 1;
-        ch.el.classList.toggle('is-active', active);
+        if (!ch.active && (reduced || reached || segU[i] >= 1)) {
+          ch.active = true;
+          ch.el.classList.add('is-active');
+        }
       }
     });
   }

@@ -359,19 +359,52 @@ function resampleLine(pts, step) {
 
 /* ---------- shared <defs>: grain patterns + rough-edge filter ---------- */
 
+// The grain is a few hundred tiny pastel marks per tile. In the browser each tile is
+// painted once into a small bitmap and the pattern references that image: a vector
+// pattern would be re-rasterised mark by mark on every repaint, which made scrolling
+// through the workflows stutter. (In Node, for the SVG export, the marks stay vector.)
+const RASTER_SCALE = 3; // tile pixels per unit, so the grain stays crisp on retina screens
+
 export function sharedDefs() {
   const r = mulberry(7);
+  const canRaster = typeof document !== 'undefined';
   const grain = (id, colour, count, op0, op1, size = 72) => {
-    let marks = '';
+    const marks = [];
     for (let i = 0; i < count; i++) {
       const x = r() * size, y = r() * size;
       const a = r() * Math.PI;
       const l = 0.5 + r() * 1.9;
       const w = 0.5 + r() * 0.9;
       const op = op0 + r() * (op1 - op0);
-      marks += `<path d="M${fx(x)} ${fx(y)}l${fx(Math.cos(a) * l)} ${fx(Math.sin(a) * l)}" stroke="${colour}" stroke-width="${fx(w)}" stroke-linecap="round" opacity="${fx(op)}"/>`;
+      marks.push([x, y, Math.cos(a) * l, Math.sin(a) * l, w, op]);
     }
-    return `<pattern id="${id}" width="${size}" height="${size}" patternUnits="userSpaceOnUse">${marks}</pattern>`;
+    let body;
+    if (canRaster) {
+      const c = document.createElement('canvas');
+      c.width = c.height = size * RASTER_SCALE;
+      const g = c.getContext('2d');
+      g.scale(RASTER_SCALE, RASTER_SCALE);
+      g.strokeStyle = colour;
+      g.lineCap = 'round';
+      // draw each mark at x and its wrapped twin so the tile repeats without seams
+      for (const [x, y, dx, dy, w, op] of marks) {
+        g.globalAlpha = op;
+        g.lineWidth = w;
+        for (const ox of [0, -size, size]) for (const oy of [0, -size, size]) {
+          if ((ox && x > 3 && x < size - 3) || (oy && y > 3 && y < size - 3)) continue;
+          g.beginPath();
+          g.moveTo(x + ox, y + oy);
+          g.lineTo(x + ox + dx, y + oy + dy);
+          g.stroke();
+        }
+      }
+      body = `<image href="${c.toDataURL('image/png')}" width="${size}" height="${size}" preserveAspectRatio="none"/>`;
+    } else {
+      body = marks
+        .map(([x, y, dx, dy, w, op]) => `<path d="M${fx(x)} ${fx(y)}l${fx(dx)} ${fx(dy)}" stroke="${colour}" stroke-width="${fx(w)}" stroke-linecap="round" opacity="${fx(op)}"/>`)
+        .join('');
+    }
+    return `<pattern id="${id}" width="${size}" height="${size}" patternUnits="userSpaceOnUse">${body}</pattern>`;
   };
   return `<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <defs>

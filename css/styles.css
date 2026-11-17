@@ -55,8 +55,7 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
+  opacity: 0.35;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .18 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -533,8 +532,8 @@ svg text {
   transform-box: fill-box;
   transform-origin: 50% 100%;
   transition:
-    opacity 0.45s ease calc(var(--i) * 110ms),
-    transform 0.8s var(--ease-spring) calc(var(--i) * 110ms);
+    opacity 0.35s ease calc(var(--i) * 60ms),
+    transform 0.6s var(--ease-spring) calc(var(--i) * 60ms);
 }
 .scene .pc.drive { transform: translateX(-36px); }
 .scene .pc.pop { transform: scale(0.2); transform-origin: 50% 50%; }
@@ -543,7 +542,7 @@ svg text {
 .scene .ol {
   stroke-dasharray: 1 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1s ease calc(var(--i) * 110ms + 200ms);
+  transition: stroke-dashoffset 0.7s ease calc(var(--i) * 60ms + 120ms);
 }
 .scene.is-in .ol { stroke-dashoffset: 0; }
 
@@ -551,7 +550,7 @@ svg text {
 .scene .chart-line {
   stroke-dasharray: 1 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.7s ease calc(var(--i) * 110ms + 700ms + var(--c, 0) * 160ms);
+  transition: stroke-dashoffset 0.6s ease calc(var(--i) * 60ms + 400ms + var(--c, 0) * 120ms);
 }
 .scene.is-in .tick,
 .scene.is-in .chart-line { stroke-dashoffset: 0; }

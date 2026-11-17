@@ -261,12 +261,12 @@ export function renderDesktop(key) {
 
   // coins (costing formulas)
   (F.coins ?? []).forEach((c) => {
-    mid += `<g class="leaflet" data-at="${c.at}"><g filter="url(#rough)">${coinCluster(p, c.x, c.y)}</g></g>`;
+    mid += `<g class="leaflet" data-at="${c.at}">${coinCluster(p, c.x, c.y)}</g>`;
   });
 
   // badges
   (F.badges ?? []).forEach((b) => {
-    const art = `<g filter="url(#rough)">${badgeArt(p, b.x, b.y, b.kind)}</g>`;
+    const art = badgeArt(p, b.x, b.y, b.kind);
     front += `<g class="leaflet" data-at="${b.at}">${art}${textBlock(b.x + 20, b.y + 6, b.label, { cls: 'lbl is-in' })}</g>`;
   });
 

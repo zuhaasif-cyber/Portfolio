@@ -273,5 +273,5 @@ export const SCENES = {
 export function renderScene(id, { x = 0, y = 0, s = 1, label = '' } = {}) {
   const p = new Pen(hashString(id));
   const inner = SCENES[id](p);
-  return `<g class="scene" data-scene="${id}" transform="${tf(x, y, s)}" role="img" aria-label="${label}"><g class="scene__art" filter="url(#rough)">${inner}</g></g>`;
+  return `<g class="scene" data-scene="${id}" transform="${tf(x, y, s)}" role="img" aria-label="${label}"><g class="scene__art">${inner}</g></g>`;
 }
