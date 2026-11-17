@@ -115,12 +115,12 @@ export function initJourney({ reduced = false } = {}) {
         ch.sticky.style.top = `${Math.round(top)}px`;
         ch.top = top;
         ch.pan = Math.max(0, ch.panW + 2 * gutter - ch.winW);
-        ch.D = Math.round(vh * 0.75 + ch.pan * 1.05);
+        ch.D = Math.round(vh * 1.15 + ch.pan * 1.3);
         ch.pin.style.height = `${h + ch.D}px`;
       }
       for (const ch of chapters) {
         ch.flowStart = docY(ch.pin) - ch.top;
-        ch.flowEnd = ch.flowStart + ch.D * 0.9;
+        ch.flowEnd = ch.flowStart + ch.D * 0.86;
       }
     } else {
       for (const ch of chapters) {
@@ -219,10 +219,9 @@ export function initJourney({ reduced = false } = {}) {
           else off = Math.max(-gutter, Math.min(ch.panW + gutter - ch.winW, cam * ch.k - ch.winW * 0.58));
           ch.svg.style.transform = `translate3d(${(-off).toFixed(1)}px,0,0)`;
         }
-        // …but the drawing leads it: everything on screen (plus a margin ahead) is
-        // revealed at once, and never un-drawn when scrolling back up.
-        const camRight = (off + ch.winW) / (ch.k || 1);
-        const want = reduced ? Infinity : near || prog > 0 ? Math.max(cam, camRight + 160) : -Infinity;
+        // …and the line grows with it, revealing scenes one by one. The drawn
+        // state is latched: scrolling back up never un-draws it (until reload).
+        const want = reduced ? Infinity : prog > 0 ? cam : -Infinity;
         if (want > ch.reveal) ch.reveal = want;
         if (ch.done) return;
         const head = Math.max(x0, Math.min(x1, ch.reveal));
@@ -241,14 +240,13 @@ export function initJourney({ reduced = false } = {}) {
           r.setAttribute('height', (k * (bot - top) + pad * 2).toFixed(1));
         });
         for (const it of ch.items) {
-          if (!it.on && (ch.done || head >= it.at)) { it.on = true; it.el.classList.add('is-in'); }
+          const reached = ch.done || (it.at <= x0 ? near || prog > 0 : prog > 0 && head >= it.at);
+          if (!it.on && reached) { it.on = true; it.el.classList.add('is-in'); }
         }
       } else {
         if (ch.done) return;
-        // mobile: reveal whatever has scrolled into the lower part of the screen
-        const r = ch.svg.getBoundingClientRect();
-        const k = r.width / ch.geo.view[0] || 1;
-        const want = reduced ? Infinity : (vh * 0.95 - r.top) / k;
+        // mobile: the line grows with scroll (reading line at 70% of the screen), latched
+        const want = reduced ? Infinity : ch.geo.entry[1] + prog * (ch.geo.exit[1] - ch.geo.entry[1]);
         if (want > ch.reveal) ch.reveal = want;
         const head = Math.max(0, Math.min(ch.geo.view[1], ch.reveal));
         if (head >= ch.geo.view[1]) ch.done = true;
@@ -309,7 +307,7 @@ export function initJourney({ reduced = false } = {}) {
 
     segs.forEach(([p, ni], i) => {
       const [a, b] = segRanges[i];
-      const now = reduced ? 1 : clamp01(((y - a) / Math.max(1, b - a)) * 1.35);
+      const now = reduced ? 1 : clamp01((y - a) / Math.max(1, b - a));
       segU[i] = Math.max(segU[i], now);
       const reached = drawSeg(i, p, segU[i], ni);
       if (i < 3) {
